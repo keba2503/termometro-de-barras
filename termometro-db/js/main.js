@@ -4,26 +4,14 @@ import { guardarCiudad, cargarFavoritas } from "./db.js";
 
 const $input = document.getElementById("input-ciudad");
 const $boton = document.getElementById("btn-buscar");
-const $resultado = document.getElementById("resultado");
-const $titulo = document.getElementById("titulo-ciudad");
-
-
-const $botonGuardar = document.createElement("button");
-$botonGuardar.textContent = "Guardar esta ciudad";
-$botonGuardar.className = "search__button";
-$titulo.insertAdjacentElement("afterend", $botonGuardar);
-
-const $seccionFavoritas = document.createElement("section");
-$seccionFavoritas.innerHTML = `
-  <h2 class="resultado__titulo">Mis ciudades favoritas</h2>
-  <ul id="lista-favoritas"></ul>
-`;
-$resultado.insertAdjacentElement("afterend", $seccionFavoritas);
-
-const $listaFavoritas = $seccionFavoritas.querySelector("#lista-favoritas");
+const $botonGuardar = document.getElementById("btn-guardar");
+const $listaFavoritas = document.getElementById("lista-favoritas");
 
 let cargando = false;
 
+// La ciudad que hay AHORA en pantalla. Dentro de manejarBusqueda, la
+// variable `ciudad` es local: nace y muere dentro de la función. Cuando
+// pulses «guardar» ya no existiría, así que la copiamos aquí.
 let ciudadActual = null;
 
 async function manejarBusqueda() {
@@ -57,6 +45,8 @@ async function manejarBusqueda() {
   }
 }
 
+// GUARDAR la ciudad de pantalla en la base de datos.
+// db.js avisa de los fallos con throw, así que aquí va el catch.
 async function manejarGuardado() {
   if (!ciudadActual) return;
 
@@ -69,6 +59,7 @@ async function manejarGuardado() {
   }
 }
 
+// LEER las favoritas y pintarlas, igual que pintas las barras.
 async function mostrarFavoritas() {
   try {
     const favoritas = await cargarFavoritas();
